@@ -31,6 +31,7 @@ public class CarStats : MonoBehaviour
     [SerializeField] public float friction;
     [SerializeField] public float arcadeFriction;
     [SerializeField] public float grip;
+    [SerializeField] public float gripTransition;
     [SerializeField] public float driftGrip;
 
     // Steering

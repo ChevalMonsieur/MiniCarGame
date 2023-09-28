@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class WheelPhysics : MonoBehaviour
@@ -11,6 +12,7 @@ public class WheelPhysics : MonoBehaviour
     ArrayList wheels = new();
 
     // variables
+    float gripCoefficient;
     float lastLength;
     float springLength;
     float counterForce;
@@ -137,8 +139,13 @@ public class WheelPhysics : MonoBehaviour
         if (isGrounded)
         {
             // determine grip to apply
-            float gripCoefficient = carStats.grip;
-            if (Input.GetKey(KeyCode.Space) && !frontwheel) gripCoefficient *= carStats.driftGrip;
+            if (Input.GetKey(KeyCode.Space) && !frontwheel) {
+                gripCoefficient -= carStats.gripTransition * Time.fixedDeltaTime;
+                if (gripCoefficient < carStats.driftGrip) gripCoefficient = carStats.driftGrip;
+            } else {
+                gripCoefficient += carStats.gripTransition * Time.fixedDeltaTime;
+                if (gripCoefficient > carStats.grip) gripCoefficient = carStats.grip;
+            }
 
             // calculate counter force depending on parallel velocity
             pointVelocity = rb.GetPointVelocity(transform.position);
